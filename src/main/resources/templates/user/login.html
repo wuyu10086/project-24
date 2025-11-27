@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录 - 任务管理系统</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 100px auto; }
+        .form { border: 1px solid #ccc; padding: 20px; border-radius: 5px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; }
+    </style>
+</head>
+<body>
+<div class="form">
+    <h2>任务管理系统 - 登录</h2>
+    <form method="post" action="/login">
+        <input type="text" name="username" placeholder="用户名" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <button type="submit">登录</button>
+    </form>
+    <p><a href="/register">没有账号？去注册</a></p>
+</div>
+</body>
+</html>

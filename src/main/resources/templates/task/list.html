@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>任务列表</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: 20px auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .task-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .priority-high { border-left: 5px solid #dc3545; }
+        .priority-medium { border-left: 5px solid #ffc107; }
+        .priority-low { border-left: 5px solid #28a745; }
+        button { padding: 5px 10px; margin: 0 5px; }
+        .btn-danger { background: #dc3545; color: white; border: none; }
+        .btn-success { background: #28a745; color: white; border: none; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h2>任务列表</h2>
+    <div>
+        <span>欢迎, <b th:text="${user.username}"></b></span>
+        <a href="/logout">退出</a>
+    </div>
+</div>
+
+<!-- 添加任务表单 -->
+<div class="form">
+    <h3>添加新任务</h3>
+    <form method="post" action="/tasks/add">
+        <input type="text" name="title" placeholder="任务标题" required style="width: 100%;">
+        <textarea name="description" placeholder="任务描述" style="width: 100%; height: 60px;"></textarea>
+        <select name="priority" style="padding: 5px;">
+            <option value="1">高优先级</option>
+            <option value="2" selected>中优先级</option>
+            <option value="3">低优先级</option>
+        </select>
+        <input type="datetime-local" name="deadline" style="width: 100%;">
+        <button type="submit">添加任务</button>
+    </form>
+</div>
+
+<!-- 任务列表 -->
+<h3>我的任务</h3>
+<div th:each="task : ${tasks}"
+     th:class="'task-item priority-' + ${task.priority == 1 ? 'high' : (task.priority == 2 ? 'medium' : 'low')}">
+    <h4 th:text="${task.title}"></h4>
+    <p th:text="${task.description}"></p>
+    <p>
+        <span th:text="${task.priority == 1 ? '高' : (task.priority == 2 ? '中' : '低')}">优先级</span> |
+        截止: <span th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"></span> |
+        状态: <span th:text="${task.status == 0 ? '未完成' : '已完成'}"></span>
+    </p>
+    <form method="post" action="/tasks/update" style="display: inline;">
+        <input type="hidden" name="id" th:value="${task.id}">
+        <input type="hidden" name="status" th:value="${task.status == 0 ? 1 : 0}">
+        <button type="submit" th:class="${task.status == 0 ? 'btn-success' : 'btn-secondary'}"
+                th:text="${task.status == 0 ? '标记完成' : '标记未完成'}"></button>
+    </form>
+    <a th:href="@{/tasks/delete/{id}(id=${task.id})}"
+       class="btn-danger"
+       onclick="return confirm('确定删除吗？')">删除</a>
+</div>
+</body>
+</html>
